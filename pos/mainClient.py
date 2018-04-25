@@ -75,7 +75,23 @@ while True:
 				err = bc.AddBlock1(bNew)
 		sock.close()
 	else:
+		sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		sock.connect(server_address)
+
 		#print("DONE")
+		data = recv_msg(sock)
+		if(data):
+
+			print(data.decode())
+
+			if("HIT"):
+				print('WOO')
+				myHash = "YO"
+				message = "HITRESPONSE," + myHash
+				send_msg(sock,message.encode())
+
+
+		'''
 		if(mine):
 			sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 			sock.connect(server_address)
@@ -131,7 +147,7 @@ while True:
 		for i in c:
 			print(i.getData())
 		
-
+		'''
 
 
 
