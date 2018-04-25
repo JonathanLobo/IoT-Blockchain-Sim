@@ -124,6 +124,8 @@ while True:
 						err = bc.AddBlock1(bNew)
 
 				mine = True
+			elif finished == -2:
+				print("I HAVE NO CLUE")
 			sock.close()
 
 		c = bc.getChain()

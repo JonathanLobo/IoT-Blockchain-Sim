@@ -1,5 +1,7 @@
 from Block import Block
 import struct
+import socket
+
 
 start = 0
 ip = "192.168.1.154"
@@ -53,22 +55,27 @@ class BlockChain:
 		print('connecting to %s port %s' % server_address)
 		connection = sock.connect(server_address)
 
-		message = "DIDILOSE" + "," + str(self._nIndex)
+		message = "DIDILOSE" + "," + str(bNew._nIndex)
 		send_msg(sock, message.encode())
+		
 		finished = -2
-		while True:
-			data = recv_msg(sock).decode()
-			if(data):
-				if(data == "YES"):
-					sock.close()
-					finished =  -1
-				else:
-					sock.close()
-					finished = 0
 
-		if(finished == 0):
+		data = recv_msg(sock).decode()
+		print("\n\n\n\n")
+		print(data)
+		if(data):
+			if(data == "YES"):
+				sock.close()
+				finished =  -1
+			else:
+				sock.close()
+				finished = 1
+
+		if(finished == 1):
 			self.chain.append(bNew)
-			return finished
+		
+		return finished
+
 
 	def AddBlockServer(self, bNew):
 		bNew.sPrevHash = self._GetLastBlock().GetHash()
