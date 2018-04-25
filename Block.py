@@ -126,7 +126,7 @@ class Block:
 		return 1
 
 	def getData(self):
-		formatted = str(self._nIndex) + ":" + str(self._sData) + ":" + str(self._nNonce) + ":" + str(self._tTime) + ":" + str(self.sPrevHash) + ":" + str(self._sHash)
+		formatted = str(self._nIndex) + ";" + str(self._sData) + ";" + str(self._nNonce) + ";" + str(self._tTime) + ";" + str(self.sPrevHash) + ";" + str(self._sHash)
 
 		return formatted
 
