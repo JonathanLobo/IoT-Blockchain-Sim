@@ -82,7 +82,7 @@ while True:
 			mine = False
 
 			block = Block(len(bc.getChain()), myDataToMine)
-			finished = bc.AddBlock(block, sock)
+			finished = bc.AddBlock(block)
 
 			if finished == 1:
 				sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

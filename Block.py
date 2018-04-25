@@ -62,7 +62,7 @@ class Block:
 		return hashlib.sha256(val.encode('utf-8')).hexdigest()
 
 
-	def MineBlock(self, nDifficulty, sock):
+	def MineBlock(self, nDifficulty):
 		cstr = ""
 		for i in range(0,nDifficulty):
 			cstr = cstr + "0"

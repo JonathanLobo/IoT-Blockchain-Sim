@@ -12,9 +12,9 @@ class BlockChain:
 	def _GetLastBlock(self):
 		return self.chain[len(self.chain)-1]
 
-	def AddBlock(self, bNew, socket):
+	def AddBlock(self, bNew):
 		bNew.sPrevHash = self._GetLastBlock().GetHash()
-		finished = bNew.MineBlock(int(self._nDifficulty), socket)
+		finished = bNew.MineBlock(int(self._nDifficulty))
 		if(finished == -1):
 			return -1
 		else:
