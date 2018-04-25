@@ -87,9 +87,9 @@ class Block:
 				connection = sock.connect(server_address)
 
 				message = "DIDILOSE" + "," + str(self._nIndex)
-				send_msg(sock, message)
+				send_msg(sock, message.encode())
 				while True:
-					data = recv_msg(sock)
+					data = recv_msg(sock).decode()
 					if(data):
 						if(data == "YES"):
 							sock.close()

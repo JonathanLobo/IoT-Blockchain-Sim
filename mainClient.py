@@ -52,14 +52,13 @@ myDataToMine = -1
 while True:
 	if(start == 0):
 		message = 'new'
-		send_msg(sock,message)
+		send_msg(sock,message.encode())
 		start = 1
 		#sock.sendall(message.encode())
 	if(start == 1):
 		start = 2
 		
-		data = recv_msg(sock)
-		print(data)
+		data = recv_msg(sock).decode()
 
 		blocks = data.split(",")
 
@@ -92,7 +91,7 @@ while True:
 				block = block.getData()
 				
 				message = message + block
-				send_msg(sock,message)
+				send_msg(sock,message.encode())
 				myDataToMine = recv_msg(sock)
 				mine=True
 		
@@ -101,7 +100,7 @@ while True:
 				sock.connect(server_address)
 
 				message = 'UPDATEME,' + str(len(bc.getChain())-1)
-				send_msg(sock,message)
+				send_msg(sock,message.encode())
 				
 				data = recv_msg(sock)
 				
