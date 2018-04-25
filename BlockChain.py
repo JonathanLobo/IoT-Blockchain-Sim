@@ -6,7 +6,7 @@ class BlockChain:
 	chain = []
 	def __init__(self, nDifficulty, genesis):
 		self._nDifficulty = nDifficulty
-		
+
 		self.chain.append(Block(0, genesis))
 
 	def _GetLastBlock(self):
@@ -15,6 +15,15 @@ class BlockChain:
 	def AddBlock(self, bNew):
 		bNew.sPrevHash = self._GetLastBlock().GetHash()
 		finished = bNew.MineBlock(int(self._nDifficulty))
+		if(finished == -1):
+			return -1
+		else:
+			self.chain.append(bNew)
+			return finished
+
+	def AddBlockServer(self, bNew):
+		bNew.sPrevHash = self._GetLastBlock().GetHash()
+		finished = bNew.MineBlockServer(int(self._nDifficulty))
 		if(finished == -1):
 			return -1
 		else:
@@ -30,7 +39,3 @@ class BlockChain:
 
 	def getDifficulty(self):
 		return self._nDifficulty
-
-
-
-

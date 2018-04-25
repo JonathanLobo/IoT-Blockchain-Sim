@@ -70,13 +70,13 @@ class Block:
 		cstr = str(cstr)
 
 		tempHash = ""
-		
-		count = 0 
+
+		count = 0
 
 		while tempHash[0:nDifficulty] != cstr:
 			self._nNonce = self._nNonce + 1
 			tempHash = self._CalculateHash()
-			count = count + 1 
+			count = count + 1
 			if(count % 100000 == 0):
 				# Create a TCP/IP socket
 				sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -102,6 +102,26 @@ class Block:
 
 		self._sHash = tempHash
 
+		print("Block Mined: " + self._sHash)
+		return 1
+
+	def MineBlockServer(self, nDifficulty):
+		cstr = ""
+		for i in range(0,nDifficulty):
+			cstr = cstr + "0"
+
+		cstr = str(cstr)
+
+		tempHash = ""
+
+		count = 0
+
+		while tempHash[0:nDifficulty] != cstr:
+			self._nNonce = self._nNonce + 1
+			tempHash = self._CalculateHash()
+
+		self._sHash = tempHash
+
 		print("Block Mined:" + self._sHash)
 		return 1
 
@@ -112,11 +132,3 @@ class Block:
 
 	def getSData(self):
 		return self._sData
-
-
-
-
-
-
-
-
