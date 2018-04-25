@@ -32,16 +32,17 @@ def recvall(sock, n):
 
 # Create BlockChain
 
-if os.path.isfile('chain.txt'):
-    # reload the chain
+# if os.path.isfile('chain.txt'):
+#     # reload the chain
+#     print('yfp')
+#
+# else:
+bc = BlockChain(5,"hello world")
+bc.AddBlockServer(Block(1, "Block 1 Data"))
 
-else:
-    bc = BlockChain(5,"hello world")
-    bc.AddBlockServer(Block(1, "Block 1 Data"))
-
-    with open("chain.txt", "a") as myfile:
-        myfile.write("Genesis block" + '\n')
-        myfile.write(bc.getChain()[1].getData() + '\n')
+with open("chain.txt", "w") as myfile:
+    myfile.write("Genesis block" + '\n')
+    myfile.write(bc.getChain()[1].getData() + '\n')
 
 # Create a TCP/IP socket
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
