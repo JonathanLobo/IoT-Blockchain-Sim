@@ -77,6 +77,8 @@ class Block:
 			self._nNonce = self._nNonce + 1
 			tempHash = self._CalculateHash()
 			count = count + 1
+			
+			'''
 			if(count % 100000 == 0):
 				# Create a TCP/IP socket
 				sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -97,13 +99,13 @@ class Block:
 						else:
 							sock.close()
 							break
-
+			'''
 
 
 		self._sHash = tempHash
 
 		print("Block Mined: " + self._sHash)
-		return 1
+		
 
 	def MineBlockServer(self, nDifficulty):
 		cstr = ""
