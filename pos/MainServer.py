@@ -1,5 +1,6 @@
 import socket
 import sys
+import os
 import struct
 from Block import Block
 from BlockChain import BlockChain
@@ -31,8 +32,17 @@ def recvall(sock, n):
 
 # Create BlockChain
 
+# if os.path.isfile('chain.txt'):
+#     # reload the chain
+#     print('yfp')
+#
+# else:
 bc = BlockChain(5,"hello world")
 bc.AddBlockServer(Block(1, "Block 1 Data"))
+
+with open("chain.txt", "w") as myfile:
+    myfile.write("Genesis block" + '\n')
+    myfile.write(bc.getChain()[1].getData() + '\n')
 
 # Create a TCP/IP socket
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -46,10 +56,13 @@ sock.listen(4)
 
 transactions = 1
 
+connections = []
+
 while True:
     # Wait for a connection
     print('waiting for a connection')
     connection, client_address = sock.accept()
+    connections.append(connection)
 
     print('connection from' + str(client_address))
 
@@ -80,6 +93,9 @@ while True:
                 # think about edge case if 2 nodes send newblock at once
                 vals = data[1].split(';')
                 bNew = Block(vals[0], vals[1], vals[2], vals[3], vals[4], vals[5])
+                with open("chain.txt", "a") as myfile:
+                    myfile.write(bNew.getData() + '\n')
+                print(bNew.getData())
                 bc.AddBlock1(bNew)
                 transactions = str(randint(1, 100000))
                 send_msg(connection, str(transactions).encode())
@@ -101,6 +117,13 @@ while True:
                         chainString = chainString + ','
 
                 send_msg(connection, chainString.encode())
+
+            elif (message == 'SENDMSG'):
+                for connection in connections:
+                    try:
+                        send_msg(connection, "HIT".encode())
+                    except:
+                        t = 0
 
             break
 
