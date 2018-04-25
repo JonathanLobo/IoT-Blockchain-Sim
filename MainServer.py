@@ -67,7 +67,7 @@ while True:
 
                 for i in range(0, len(chain)):
                     if (i == 0):
-                        chainString = chainString + str(bc.getDifficulty()) + ':' + str(chain[i].getSData())
+                        chainString = chainString + str(bc.getDifficulty()) + ';' + str(chain[i].getSData())
                     else:
                         chainString = chainString + chain[i].getData()
                     if (i != len(chain) - 1):
@@ -78,7 +78,7 @@ while True:
 
             elif (message == 'NEWBLOCK'):
                 # think about edge case if 2 nodes send newblock at once
-                vals = data[1].split(":")
+                vals = data[1].split(';')
                 bNew = Block(vals[0], vals[1], vals[2], vals[3], vals[4], vals[5])
                 bc.AddBlock1(bNew)
                 transactions = str(randint(1, 100000))
