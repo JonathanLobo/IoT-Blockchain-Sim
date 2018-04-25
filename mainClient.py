@@ -72,7 +72,6 @@ while True:
 				bc = BlockChain(vals[0],vals[1])
 			else:
 				print(vals)
-				time.sleep(100)
 				bNew = Block(int(vals[0]), vals[1], int(vals[2]), vals[3], vals[4], vals[5])
 				err = bc.AddBlock1(bNew)
 		sock.close()
