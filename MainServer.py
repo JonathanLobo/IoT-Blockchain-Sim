@@ -34,6 +34,7 @@ def recvall(sock, n):
 
 if os.path.isfile('chain.txt'):
     # reload the chain
+    print('yfp')
 
 else:
     bc = BlockChain(5,"hello world")
