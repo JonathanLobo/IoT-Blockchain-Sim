@@ -34,6 +34,10 @@ def recvall(sock, n):
 bc = BlockChain(5,"hello world")
 bc.AddBlockServer(Block(1, "Block 1 Data"))
 
+with open("chain.txt", "a") as myfile:
+    myfile.write("Genesis block" + '\n')
+    myfile.write(bc.getChain()[1].getData())
+
 # Create a TCP/IP socket
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -81,6 +85,8 @@ while True:
                 vals = data[1].split(';')
                 bNew = Block(vals[0], vals[1], vals[2], vals[3], vals[4], vals[5])
                 bc.AddBlock1(bNew)
+                with open("chain.txt", "a") as myfile:
+				    myfile.write(bNew.getData() + '\n')
                 transactions = str(randint(1, 100000))
                 send_msg(connection, str(transactions).encode())
 
