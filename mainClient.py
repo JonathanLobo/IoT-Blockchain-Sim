@@ -63,7 +63,7 @@ while True:
 		blocks = data.split(",")
 
 		for block in range(0,len(blocks)):
-			vals = blocks[block].split(":")
+			vals = blocks[block].split(";")
 
 			if(block == 0):
 				myDataToMine = vals[0]
@@ -72,6 +72,7 @@ while True:
 				bc = BlockChain(vals[0],vals[1])
 			else:
 				print(vals)
+				time.sleep(100)
 				bNew = Block(int(vals[0]), vals[1], int(vals[2]), vals[3], vals[4], vals[5])
 				err = bc.AddBlock1(bNew)
 		sock.close()
@@ -92,7 +93,7 @@ while True:
 				
 				message = message + block
 				send_msg(sock,message.encode())
-				myDataToMine = recv_msg(sock)
+				myDataToMine = recv_msg(sock).decode()
 				mine=True
 		
 			elif finished == -1:
@@ -102,7 +103,7 @@ while True:
 				message = 'UPDATEME,' + str(len(bc.getChain())-1)
 				send_msg(sock,message.encode())
 				
-				data = recv_msg(sock)
+				data = recv_msg(sock).decode()
 				
 				blocks = data.split(",")
 
@@ -110,7 +111,7 @@ while True:
 					if(block == 0):
 						myDataToMine = vals[0]
 					else:
-						vals = blocks[block].split(":")
+						vals = blocks[block].split(";")
 						bNew = Block(vals[0], vals[1], vals[2], vals[3], vals[4], vals[5])
 						err = bc.AddBlock1(bNew)
 

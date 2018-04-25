@@ -32,7 +32,7 @@ def recvall(sock, n):
 # Create BlockChain
 
 bc = BlockChain(5,"hello world")
-bc.AddBlockServer(Block(1, "Block 1 Data"))
+bc.AddBlock(Block(1, "Block 1 Data"))
 
 # Create a TCP/IP socket
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -92,7 +92,7 @@ while True:
 
             elif (message == 'UPDATEME'):
                 chainString = str(transactions) + ','
-                index = str(data[1]) + 1
+                index = data[1] + 1
                 chain = bc.getChain()
 
                 for i in range(index, len(chain)):
