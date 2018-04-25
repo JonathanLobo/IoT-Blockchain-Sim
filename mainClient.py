@@ -70,14 +70,14 @@ while True:
 
 			elif(block == 1):
 				bc = BlockChain(vals[0],vals[1])
-				with open("test.txt", "a") as myfile:
+				with open("chain.txt", "a") as myfile:
 				    myfile.write("Genesis block\n")
 
 			else:
 				print(vals)
 				bNew = Block(int(vals[0]), vals[1], int(vals[2]), vals[3], vals[4], vals[5])
-				with open("test.txt", "a") as myfile:
-				    myfile.write(bc.getChain()[1].getData() + '\n')
+				with open("chain.txt", "a") as myfile:
+				    myfile.write(bNew.getData() + '\n')
 				err = bc.AddBlock1(bNew)
 		sock.close()
 	else:
@@ -94,6 +94,8 @@ while True:
 
 				message = 'NEWBLOCK,'
 				block = block.getData()
+				with open("chain.txt", "a") as myfile:
+				    myfile.write(block + '\n')
 
 				message = message + block
 				send_msg(sock,message.encode())
@@ -117,6 +119,8 @@ while True:
 					else:
 						vals = blocks[block].split(";")
 						bNew = Block(vals[0], vals[1], vals[2], vals[3], vals[4], vals[5])
+						with open("chain.txt", "a") as myfile:
+						    myfile.write(bNew.getData() + '\n')
 						err = bc.AddBlock1(bNew)
 
 				mine = True
