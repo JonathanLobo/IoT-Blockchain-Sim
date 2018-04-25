@@ -43,6 +43,7 @@ server_address = (ip, port)
 print('connecting to %s port %s' % server_address)
 connection = sock.connect(server_address)
 
+
 bc = ""
 
 mine = True
@@ -56,7 +57,7 @@ while True:
 		#sock.sendall(message.encode())
 	if(start == 1):
 		start = 2
-		
+
 		data = recv_msg(sock).decode()
 
 		blocks = data.split(",")
@@ -69,24 +70,19 @@ while True:
 
 			elif(block == 1):
 				bc = BlockChain(vals[0],vals[1])
+				with open("chain.txt", "w") as myfile:
+				    myfile.write("Genesis block\n")
+
 			else:
 				print(vals)
 				bNew = Block(int(vals[0]), vals[1], int(vals[2]), vals[3], vals[4], vals[5])
+				with open("chain.txt", "a") as myfile:
+				    myfile.write(bNew.getData() + '\n')
 				err = bc.AddBlock1(bNew)
 		sock.close()
 	else:
 		#print("DONE")
 		if(mine):
-			sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-			sock.connect(server_address)
-
-
-
-
-
-
-
-
 			mine = False
 
 			block = Block(len(bc.getChain()), myDataToMine)
@@ -95,24 +91,26 @@ while True:
 			if finished == 1:
 				sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 				sock.connect(server_address)
-				
+
 				message = 'NEWBLOCK,'
 				block = block.getData()
-				
+				with open("chain.txt", "a") as myfile:
+				    myfile.write(block + '\n')
+
 				message = message + block
 				send_msg(sock,message.encode())
 				myDataToMine = recv_msg(sock).decode()
 				mine=True
-		
+
 			elif finished == -1:
 				sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 				sock.connect(server_address)
 
 				message = 'UPDATEME,' + str(len(bc.getChain())-1)
 				send_msg(sock,message.encode())
-				
+
 				data = recv_msg(sock).decode()
-				
+
 				blocks = data.split(",")
 
 				for block in range(0,len(blocks)):
@@ -121,6 +119,8 @@ while True:
 					else:
 						vals = blocks[block].split(";")
 						bNew = Block(vals[0], vals[1], vals[2], vals[3], vals[4], vals[5])
+						with open("chain.txt", "a") as myfile:
+						    myfile.write(bNew.getData() + '\n')
 						err = bc.AddBlock1(bNew)
 
 				mine = True
@@ -130,12 +130,3 @@ while True:
 
 		for i in c:
 			print(i.getData())
-		
-
-
-
-
-	
-
-
-
