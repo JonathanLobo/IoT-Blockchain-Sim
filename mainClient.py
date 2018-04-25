@@ -100,7 +100,7 @@ while True:
 				sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 				sock.connect(server_address)
 
-				message = 'UPDATEME,' + str(len(bc.getChain)-1)
+				message = 'UPDATEME,' + str(len(bc.getChain())-1)
 				send_msg(sock,message)
 				
 				data = recv_msg(sock)
