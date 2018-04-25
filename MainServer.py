@@ -92,7 +92,7 @@ while True:
 
             elif (message == 'UPDATEME'):
                 chainString = str(transactions) + ','
-                index = str(data[1]) + 1
+                index = int(data[1]) + 1
                 chain = bc.getChain()
 
                 for i in range(index, len(chain)):
