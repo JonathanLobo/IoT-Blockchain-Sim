@@ -1,5 +1,6 @@
 import socket
 import sys
+import os
 import struct
 from Block import Block
 from BlockChain import BlockChain
@@ -31,12 +32,16 @@ def recvall(sock, n):
 
 # Create BlockChain
 
-bc = BlockChain(5,"hello world")
-bc.AddBlockServer(Block(1, "Block 1 Data"))
+if os.path.isfile('chain.txt'):
+    # reload the chain
 
-with open("chain.txt", "a") as myfile:
-    myfile.write("Genesis block" + '\n')
-    myfile.write(bc.getChain()[1].getData())
+else:
+    bc = BlockChain(5,"hello world")
+    bc.AddBlockServer(Block(1, "Block 1 Data"))
+
+    with open("chain.txt", "a") as myfile:
+        myfile.write("Genesis block" + '\n')
+        myfile.write(bc.getChain()[1].getData() + '\n')
 
 # Create a TCP/IP socket
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -84,9 +89,10 @@ while True:
                 # think about edge case if 2 nodes send newblock at once
                 vals = data[1].split(';')
                 bNew = Block(vals[0], vals[1], vals[2], vals[3], vals[4], vals[5])
-                bc.AddBlock1(bNew)
                 with open("chain.txt", "a") as myfile:
                     myfile.write(bNew.getData() + '\n')
+                print(bNew.getData())
+                bc.AddBlock1(bNew)
                 transactions = str(randint(1, 100000))
                 send_msg(connection, str(transactions).encode())
 

@@ -70,7 +70,7 @@ while True:
 
 			elif(block == 1):
 				bc = BlockChain(vals[0],vals[1])
-				with open("chain.txt", "a") as myfile:
+				with open("chain.txt", "w") as myfile:
 				    myfile.write("Genesis block\n")
 
 			else:

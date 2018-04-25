@@ -122,7 +122,7 @@ class Block:
 
 		self._sHash = tempHash
 
-		print("Block Mined:" + self._sHash)
+		print("Block Mined: " + self._sHash)
 		return 1
 
 	def getData(self):
