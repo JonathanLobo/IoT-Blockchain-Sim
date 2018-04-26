@@ -2,6 +2,8 @@ import socket
 import sys
 import struct
 import time
+import hashlib
+
 
 
 from Block import Block
@@ -78,6 +80,7 @@ while True:
 		sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		sock.connect(server_address)
 
+		send_msg(sock,"READY".encode())
 		#print("DONE")
 		data = recv_msg(sock)
 		if(data):
@@ -85,11 +88,26 @@ while True:
 			print(data.decode())
 
 			if("HIT"):
-				print('WOO')
-				myHash = "YO"
-				message = "HITRESPONSE," + myHash
-				send_msg(sock,message.encode())
+				ip = "100.6.20.189"
+				c = bc.getChain()
+				c = c[len(c)-1]
+				h = c.GetHash()
+				val = c + h
+			 	fin = hashlib.sha256(val.encode('utf-8')).hexdigest()
 
+			if("HASH"):
+				#List of transactions
+				#i hash & add to my block
+				
+				
+				#send him block
+				message = 'NEWBLOCK,'
+				block = block.getData()
+				
+				message = message + block
+				send_msg(sock,message.encode())
+				myDataToMine = recv_msg(sock).decode()
+				mine=True
 
 		'''
 		if(mine):
