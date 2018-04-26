@@ -57,82 +57,73 @@ sock.listen(4)
 
 transactions = 1
 
-connections = []
+while True:
+    # Wait for a connection
+    print('waiting for a connection')
+    connection, client_address = sock.accept()
 
+    print('connection from' + str(client_address))
 
-def thread():
+    # Receive the data
     while True:
-        # Wait for a connection
-        print('waiting for a connection')
-        connection, client_address = sock.accept()
-        connections.append(connection)
 
-        print('connection from' + str(client_address))
+        data = recv_msg(connection)
+        if data:
+            data = data.decode("utf-8").split(',')
+            message = data[0]
+            print('received ' + message)
+            if (message == 'new'):
+                chain = bc.getChain()
+                chainString = str(transactions) + ','
 
-        # Receive the data
-        while True:
-
-            data = recv_msg(connection)
-            if data:
-                data = data.decode("utf-8").split(',')
-                message = data[0]
-                print('received ' + message)
-                if (message == 'new'):
-                    chain = bc.getChain()
-                    chainString = str(transactions) + ','
-
-                    for i in range(0, len(chain)):
-                        if (i == 0):
-                            chainString = chainString + str(bc.getDifficulty()) + ';' + str(chain[i].getSData())
-                        else:
-                            chainString = chainString + chain[i].getData()
-                        if (i != len(chain) - 1):
-                            chainString = chainString + ','
-
-                    send_msg(connection, chainString.encode())
-                    print('sent the blockchain to ' + str(client_address))
-
-                elif (message == 'NEWBLOCK'):
-                    # think about edge case if 2 nodes send newblock at once
-                    vals = data[1].split(';')
-                    bNew = Block(vals[0], vals[1], vals[2], vals[3], vals[4], vals[5])
-                    with open("chain.txt", "a") as myfile:
-                        myfile.write(bNew.getData() + '\n')
-                    print(bNew.getData())
-                    bc.AddBlock1(bNew)
-                    transactions = str(randint(1, 100000))
-                    send_msg(connection, str(transactions).encode())
-
-                elif (message == 'DIDILOSE'):
-                    if (int(data[1]) == len(bc.getChain())):
-                        send_msg(connection, 'NO'.encode())
+                for i in range(0, len(chain)):
+                    if (i == 0):
+                        chainString = chainString + str(bc.getDifficulty()) + ';' + str(chain[i].getSData())
                     else:
-                        send_msg(connection, 'YES'.encode())
-
-                elif (message == 'UPDATEME'):
-                    chainString = str(transactions) + ','
-                    index = int(data[1]) + 1
-                    chain = bc.getChain()
-
-                    for i in range(index, len(chain)):
                         chainString = chainString + chain[i].getData()
-                        if i != len(chain) - 1:
-                            chainString = chainString + ','
+                    if (i != len(chain) - 1):
+                        chainString = chainString + ','
 
-                    send_msg(connection, chainString.encode())
+                send_msg(connection, chainString.encode())
+                print('sent the blockchain to ' + str(client_address))
 
-                elif (message == 'SENDMSG'):
-                    for connection in connections:
-                        try:
-                            send_msg(connection, "HIT".encode())
-                        except:
-                            t = 0
+            elif (message == 'NEWBLOCK'):
+                # think about edge case if 2 nodes send newblock at once
+                vals = data[1].split(';')
+                bNew = Block(vals[0], vals[1], vals[2], vals[3], vals[4], vals[5])
+                with open("chain.txt", "a") as myfile:
+                    myfile.write(bNew.getData() + '\n')
+                print(bNew.getData())
+                bc.AddBlock1(bNew)
+                transactions = str(randint(1, 100000))
+                send_msg(connection, str(transactions).encode())
 
-                break
+            elif (message == 'DIDILOSE'):
+                if (int(data[1]) == len(bc.getChain())):
+                    send_msg(connection, 'NO'.encode())
+                else:
+                    send_msg(connection, 'YES'.encode())
 
-t = threading.Thread(target=thread)
-threads.append(t)
-t.start()
+            elif (message == 'UPDATEME'):
+                chainString = str(transactions) + ','
+                index = int(data[1]) + 1
+                chain = bc.getChain()
+
+                for i in range(index, len(chain)):
+                    chainString = chainString + chain[i].getData()
+                    if i != len(chain) - 1:
+                        chainString = chainString + ','
+
+                send_msg(connection, chainString.encode())
+
+            elif (message == 'READY'):
+                send_msg(connection, "HIT".encode())
+
+            elif (message == 'VERIFY'):
+                toClient = 'HASH,' + str(transactions)
+                send_msg(connection, toClient.encode())
+
+            break
 
 # Clean up the connection
 connection.close()
