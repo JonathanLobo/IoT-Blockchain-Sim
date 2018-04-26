@@ -2,6 +2,8 @@ import socket
 import sys
 import struct
 import time
+import hashlib
+
 
 
 from Block import Block
@@ -69,27 +71,72 @@ while True:
 
 			elif(block == 1):
 				bc = BlockChain(vals[0],vals[1])
+				with open("chain.txt", "w") as myfile:
+					myfile.write("Genesis block\n")
 			else:
 				print(vals)
 				bNew = Block(int(vals[0]), vals[1], int(vals[2]), vals[3], vals[4], vals[5])
 				err = bc.AddBlock1(bNew)
+				with open("chain.txt", "a") as myfile:
+					myfile.write(bNew.getData() + '\n')
 		sock.close()
 	else:
 		sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		sock.connect(server_address)
 
+		send_msg(sock,"READY".encode())
 		#print("DONE")
-		data = recv_msg(sock)
-		if(data):
+		while True:
+			data = recv_msg(sock)
+			if(data):
+				d= data.decode()
+				print("ME " + d)
+				d = data.split(",")
 
-			print(data.decode())
+				c = bc.getChain()
+				c = c[len(c)-1]
+				h = c.GetHash()
 
-			if("HIT"):
-				print('WOO')
-				myHash = "YO"
-				message = "HITRESPONSE," + myHash
-				send_msg(sock,message.encode())
+				if("HIT" == d[0]):
+					sock.close()
 
+					sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+					sock.connect(server_address)
+
+					ip = "100.6.20.189"
+					
+					val = ip + str(h)
+					fin = hashlib.sha256(val.encode('utf-8')).hexdigest()
+					send_msg(sock,"VERIFY".encode())
+
+
+				if("HASH" == d[0]):
+					sock.close()
+					sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+					sock.connect(server_address)
+					#List of transactions
+					#i hash & add to my block
+					#data - d[1]    
+					myBlock = hashlib.sha256(str(time.time()).encode('utf-8')).hexdigest()
+
+					#def __init__(self, nIndexIn, sDataIn, nNonce=-1, tTime=0, sPrevHash=-1, sHash=-1):
+
+
+					bNew = Block(len(bc.getChain()), d[1], -1, time.time(), h, myBlock)
+
+					message = 'NEWBLOCK,'
+
+					block = bNew.getData()
+					
+					message = message + block
+					send_msg(sock,message.encode())
+					myDataToMine = recv_msg(sock).decode()
+					bc.AddBlock1(bNew)
+					with open("chain.txt", "a") as myfile:
+						myfile.write(bNew.getData() + '\n')
+					break
+				else:
+					print("YOO")
 
 		'''
 		if(mine):
