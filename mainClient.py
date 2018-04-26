@@ -15,7 +15,7 @@ nonce = int(sys.argv[1])
 if(nonce == 0):
 	nonce = 0
 else:
-	nonce = (sys.maxint / 4) * nonce
+	nonce = (sys.maxsize / 4) * nonce
 
 def send_msg(sock, msg):
 	# Prefix each message with a 4-byte length (network byte order)
