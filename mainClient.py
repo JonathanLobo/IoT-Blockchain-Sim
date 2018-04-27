@@ -125,7 +125,11 @@ while True:
 						myDataToMine = vals[0]
 					else:
 						vals = blocks[block].split(";")
-						bNew = Block(vals[0], vals[1], math.floor(float(vals[2])), vals[3], vals[4], vals[5])
+						try:
+							bNew = Block(vals[0], vals[1], math.floor(float(vals[2])), vals[3], vals[4], vals[5])
+						except:
+							print(vals)
+							exit()
 						with open("chain.txt", "a") as myfile:
 						    myfile.write(bNew.getData() + '\n')
 						err = bc.AddBlock1(bNew)
