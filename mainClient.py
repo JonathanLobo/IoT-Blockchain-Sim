@@ -2,6 +2,7 @@ import socket
 import sys
 import struct
 import time
+import math
 
 
 from Block import Block
@@ -81,7 +82,7 @@ while True:
 
 			else:
 				print(vals)
-				bNew = Block(int(vals[0]), vals[1], int(vals[2]), vals[3], vals[4], vals[5])
+				bNew = Block(int(vals[0]), vals[1], math.floor(float(vals[2])), vals[3], vals[4], vals[5])
 				with open("chain.txt", "a") as myfile:
 				    myfile.write(bNew.getData() + '\n')
 				err = bc.AddBlock1(bNew)
@@ -124,7 +125,7 @@ while True:
 						myDataToMine = vals[0]
 					else:
 						vals = blocks[block].split(";")
-						bNew = Block(vals[0], vals[1], vals[2], vals[3], vals[4], vals[5])
+						bNew = Block(vals[0], vals[1], math.floor(float(vals[2])), vals[3], vals[4], vals[5])
 						with open("chain.txt", "a") as myfile:
 						    myfile.write(bNew.getData() + '\n')
 						err = bc.AddBlock1(bNew)
