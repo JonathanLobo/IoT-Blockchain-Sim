@@ -132,3 +132,6 @@ class Block:
 
 	def getSData(self):
 		return self._sData
+
+	def getIndex(self):
+		return self._nIndex

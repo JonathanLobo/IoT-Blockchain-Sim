@@ -37,7 +37,7 @@ def recvall(sock, n):
 #     print('yfp')
 #
 # else:
-bc = BlockChain(5,"hello world")
+bc = BlockChain(6,"hello world")
 bc.AddBlockServer(Block(1, "Block 1 Data"))
 
 with open("chain.txt", "w") as myfile:
@@ -90,10 +90,11 @@ while True:
                 # think about edge case if 2 nodes send newblock at once
                 vals = data[1].split(';')
                 bNew = Block(vals[0], vals[1], vals[2], vals[3], vals[4], vals[5])
-                with open("chain.txt", "a") as myfile:
-                    myfile.write(bNew.getData() + '\n')
-                print(bNew.getData())
-                bc.AddBlock1(bNew)
+                if (int(bNew.getIndex()) != int(bc._GetLastBlock().getIndex()) + 1):
+                    with open("chain.txt", "a") as myfile:
+                        myfile.write(bNew.getData() + '\n')
+                    print(bNew.getData())
+                    bc.AddBlock1(bNew)
                 transactions = str(randint(1, 100000))
                 send_msg(connection, str(transactions).encode())
 
