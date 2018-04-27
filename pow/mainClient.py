@@ -11,6 +11,12 @@ start = 0
 ip = "192.168.1.154"
 port = 8000
 
+nonce = int(sys.argv[1])
+if(nonce == 0):
+	nonce = 0
+else:
+	nonce = (sys.maxsize / 4) * nonce
+
 def send_msg(sock, msg):
 	# Prefix each message with a 4-byte length (network byte order)
 	msg = struct.pack('>I', len(msg)) + msg
@@ -85,7 +91,7 @@ while True:
 		if(mine):
 			mine = False
 
-			block = Block(len(bc.getChain()), myDataToMine)
+			block = Block(len(bc.getChain()), myDataToMine, nonce)
 			finished = bc.AddBlock(block)
 
 			if finished == 1:

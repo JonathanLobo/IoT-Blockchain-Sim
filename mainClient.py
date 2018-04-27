@@ -2,6 +2,7 @@ import socket
 import sys
 import struct
 import time
+import math
 
 
 from Block import Block
@@ -10,6 +11,12 @@ from BlockChain import BlockChain
 start = 0
 ip = "192.168.1.154"
 port = 8000
+
+nonce = int(sys.argv[1])
+if(nonce == 0):
+	nonce = 0
+else:
+	nonce = (sys.maxsize / 4) * nonce
 
 def send_msg(sock, msg):
 	# Prefix each message with a 4-byte length (network byte order)
@@ -75,7 +82,7 @@ while True:
 
 			else:
 				print(vals)
-				bNew = Block(int(vals[0]), vals[1], int(vals[2]), vals[3], vals[4], vals[5])
+				bNew = Block(int(vals[0]), vals[1], math.floor(float(vals[2])), vals[3], vals[4], vals[5])
 				with open("chain.txt", "a") as myfile:
 				    myfile.write(bNew.getData() + '\n')
 				err = bc.AddBlock1(bNew)
@@ -85,7 +92,7 @@ while True:
 		if(mine):
 			mine = False
 
-			block = Block(len(bc.getChain()), myDataToMine)
+			block = Block(len(bc.getChain()), myDataToMine, nonce)
 			finished = bc.AddBlock(block)
 
 			if finished == 1:
@@ -118,7 +125,7 @@ while True:
 						myDataToMine = vals[0]
 					else:
 						vals = blocks[block].split(";")
-						bNew = Block(vals[0], vals[1], vals[2], vals[3], vals[4], vals[5])
+						bNew = Block(vals[0], vals[1], math.floor(float(vals[2])), vals[3], vals[4], vals[5])
 						with open("chain.txt", "a") as myfile:
 						    myfile.write(bNew.getData() + '\n')
 						err = bc.AddBlock1(bNew)

@@ -81,6 +81,7 @@ while True:
 					myfile.write(bNew.getData() + '\n')
 		sock.close()
 	else:
+		time.sleep(10)
 		sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		sock.connect(server_address)
 
