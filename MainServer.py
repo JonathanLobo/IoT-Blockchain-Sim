@@ -37,7 +37,7 @@ def recvall(sock, n):
 #     print('yfp')
 #
 # else:
-bc = BlockChain(1,"hello world")
+bc = BlockChain(5,"hello world")
 bc.AddBlockServer(Block(1, "Block 1 Data"))
 
 with open("chain.txt", "w") as myfile:
